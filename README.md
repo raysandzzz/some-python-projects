@@ -16,7 +16,7 @@ A collection of simple Python utilities, automation scripts, and small GUI appli
 
 ### Scripts
 
-#### File Sorter
+#### <ins>File Sorter</ins>
 A lightweight automation tool that organizes files in a directory into categorized folders based on their extensions. It prevents overwriting through collision resolution, generates a local history log, and allows rolling back changes.
 
 * **Location:** `scripts/file_sorter.py`
@@ -39,14 +39,20 @@ If you prefer or find it more convenient, you can also run it directly from your
   python file_sorter.py
   
 * **Organize a specific folder without moving the script:**
- ```Bash
+
+  ```bash
   python file_sorter.py "path/to/target/folder"
+  ```
 
 * **Undo the last organization:**
- ```Bash
+
+  ```bash
   python file_sorter.py --undo
   python file_sorter.py "path/to/target/folder" --undo
+  ```
 
 * **Delete the history log (Lock changes permanently):**
- ```Bash
+
+  ```bash
   python file_sorter.py --clear-history
+  ```
