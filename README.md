@@ -1,4 +1,4 @@
-# Some Python Projects :)
+# Some Python Projects :D
 
 A collection of simple Python utilities, automation scripts, and small GUI applications designed to be functional and easy to use. Each one was built in a day or less.
 
@@ -7,8 +7,9 @@ A collection of simple Python utilities, automation scripts, and small GUI appli
 ## 📋 Overview
 
 | Project | Category | Tech / Libraries | Description |
-|---|---|---|---|
-| [`file_sorter.py`](#file-sorter) | Script / Automation | `pathlib`, `shutil`, `argparse` | Organizes directory files by category with collision handling and undo support. |
+| :--- | :--- | :--- | :--- |
+| `file_sorter.py` | Script / Automation | `pathlib`, `shutil`, `argparse` | Organizes directory files by category with collision handling and undo support. |
+| `password_gen.py` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
 
 ---
 
@@ -56,3 +57,26 @@ If you prefer or find it more convenient, you can also run it directly from your
   ```bash
   python file_sorter.py --clear-history
   ```
+
+#### <ins>Password Generator</ins>
+
+Generates cryptographically secure random passwords. It features custom length and character set selection. 
+
+* **Location:** `scripts/password_gen.py`
+* **Dependencies:** None (Standard Library only: Python 3.8+)
+
+**Features:**
+
+* Cryptographically secure randomness powered by Python's `secrets` module.
+* Guarantees at least one character of each selected type (uppercase, digits, symbols) to meet standard password policy requirements.
+* Configurable password length and character sets.
+* Support for generating single or multiple passwords in a single run.
+* Interactive step-by-step CLI interface with strict input validation.
+
+**Usage:**
+
+You can simply double-click `password_gen.py` or run it directly from your terminal:
+
+* **Run the interactive generator:**
+  ```bash
+  python password_gen.py
