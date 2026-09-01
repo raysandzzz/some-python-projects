@@ -10,6 +10,7 @@ A collection of simple Python utilities, automation scripts, and small GUI appli
 | :--- | :--- | :--- | :--- |
 | `file_sorter.py` | Script / Automation | `pathlib`, `shutil`, `argparse` | Organizes directory files by category with collision handling and undo support. |
 | `password_gen.py` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
+| `pomodoro_timer.py` | Script / Productivity | `time` | Interactive Pomodoro timer with real-time CLI progress bars and audio alerts. |
 
 ---
 
@@ -80,3 +81,25 @@ You can simply double-click `password_gen.py` or run it directly from your termi
 * **Run the interactive generator:**
   ```bash
   python password_gen.py
+
+#### <ins>CLI Pomodoro Timer</ins>
+
+A simple CLI timer to help you keep focused, with clean progress bars and work/break sessions.
+
+* **Location:** `scripts/pomodoro_timer.py`
+* **Dependencies:** None (Standard Library only: Python 3.8+)
+
+**Features:**
+
+* Real-time animated progress bar right in your terminal.
+* Quick presets (25/5 min, 15/3 min) or custom study/break times.
+* System sound alert when your time is up.
+* Quick cancel anytime by pressing `Ctrl + C`.
+* Easy defaults: just press Enter to start.
+
+**Usage:**
+
+Double-click `pomodoro_timer.py` or run:
+
+```bash
+python pomodoro_timer.py
