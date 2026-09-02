@@ -1,6 +1,6 @@
-# Some Python Projects :D
+# Some Python Projects.
 
-A collection of simple Python utilities, automation scripts, and small GUI applications designed to be functional and easy to use. Each one was built in a day or less.
+A mini collection of simple Python utilities, automation scripts, and small GUI applications designed to be functional and easy to use. Each one was built in a day or less.
 
 ---
 
@@ -9,9 +9,9 @@ A collection of simple Python utilities, automation scripts, and small GUI appli
 | Project | Category | Tech / Libraries | Description |
 | :--- | :--- | :--- | :--- |
 | `file_sorter.py` | Script / Automation | `pathlib`, `shutil`, `argparse` | Organizes directory files by category with collision handling and undo support. |
-| `password_gen.py` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
+| `password_generator.py` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
 | `pomodoro_timer.py` | Script / Productivity | `time` | Interactive Pomodoro timer with real-time CLI progress bars and audio alerts. |
-
+| `decision_roulette.py` | Script / Utility | `secrets`, `time` | A marquee-style animated decision roulette with realistic deceleration. |
 ---
 
 ## 🛠️ Projects
@@ -99,7 +99,28 @@ A simple CLI timer to help you keep focused, with clean progress bars and work/b
 
 **Usage:**
 
-Double-click `pomodoro_timer.py` or run:
+You can simply double-click `pomodoro_timer.py` or run it directly from your terminal:
+
+* **Run the interactive generator:**
+  ```bash
+  python pomodoro_timer.py
+
+#### <ins>Decision Roulette</ins>
+
+A simple CLI decision-maker that spins through your choices with fair random picks.
+
+* **Location:** `scripts/decision_roulette.py`
+* **Dependencies:** None (Standard Library only: Python 3.8+)
+
+**Features:**
+
+* Animated marquee frame that slows down naturally to pick a winner.
+* Unbiased random selection powered by `secrets`.
+* Custom options support
+
+**Usage:**
+
+Double-click `decision_wheel.py` or run:
 
 ```bash
-python pomodoro_timer.py
+python decision_wheel.py
