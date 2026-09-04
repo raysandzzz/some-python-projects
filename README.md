@@ -124,3 +124,7 @@ Double-click `decision_wheel.py` or run:
 
 ```bash
 python decision_wheel.py
+
+
+---
+### Tkinter apps
