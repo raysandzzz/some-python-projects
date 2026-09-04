@@ -1,0 +1,12 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# App dynamic runtime data
+**/tasks.json
+
+# Environments (however i don't have env in this repo)
+.venv/
+venv/
+env/
