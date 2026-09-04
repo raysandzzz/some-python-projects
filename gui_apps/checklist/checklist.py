@@ -2,59 +2,102 @@ import datetime
 import json
 import os
 import tkinter as tk
+import ctypes
 
-# Paleta Dark Mode con acentos verde pastel
 THEMES = {
     "dark": {
-        "bg": "#181824",  # Fondo base de la ventana principal
-        "sidebar": "#12121b",  # Barra lateral fija de navegacion
-        "card": "#222334",  # Fondo de contenedores y filas de tareas
-        "text": "#cdd6f4",  # Texto principal legible (blanco suave)
-        "accent": "#a6e3a1",  # Verde pastel para checks, títulos y foco
-        "muted": "#6c7086",  # Texto atenuado para tareas completadas/fechas
-        "btn_active": "#2f314c",  # Fondo hover/click en botones
-        "danger": "#f38ba8",  # Rojo suave para eliminar tareas
+        "bg": "#181824",
+        "sidebar": "#12121b",
+        "card": "#222334",
+        "text": "#cdd6f4",
+        "accent": "#a6e3a1",
+        "muted": "#6c7086",
+        "btn_active": "#2f314c",
+        "danger": "#f38ba8",
     }
 }
-
 
 class SimpleChecklistApp:
 
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Simple Checklist")
-
-        # Dimensiones ampliadas para mejor legibilidad y confort visual
         self.root.geometry("640x500")
         self.root.resizable(False, False)
 
-        # Configuracion base de estilos
+        # Typography state and dynamic scale definitions
+        self.use_pixel_font = False
+        self._update_font_definitions()
+
+        # Visual theme configuration
         self.theme = THEMES["dark"]
-        self.font_family = (
-            "Segoe UI"  # Fuente moderna, nitida y nativa en Windows
-        )
         self.root.configure(bg=self.theme["bg"])
 
-        # Resolucion dinamica de la ruta del archivo JSON en la carpeta local
+        # Determine path to the local JSON database
         self.base_dir = os.path.dirname(os.path.abspath(__file__))
         self.data_file = os.path.join(self.base_dir, "tasks.json")
 
-        # Cargar base de datos local y verificar el ciclo de medianoche
+        # Load stored records and verify daily reset
         self.data = self._load_data()
         self._check_midnight_reset()
 
-        # Variable que almacena la referencia del frame dinamico actual
+        # Track active view for screen transitions and font refreshes
         self.current_screen = None
+        self.current_screen_type = "daily"
 
-        # Montar layout base e iniciar en Daily Tasks
+        # Build interface layout and display default view
         self._build_layout()
         self.show_daily_screen()
 
     # =========================================================================
-    # Persistencia de Datos y Logica de Medianoche
+    # Typography Setup & Dynamic Switcher
+    # =========================================================================
+    def _update_font_definitions(self):
+        """Updates internal font tuples to match the selected typography style."""
+        if self.use_pixel_font:
+            family = "Minecraft"
+            self.f_sidebar_title = (family, 16)
+            self.f_nav = (family, 10)
+            self.f_title = (family, 24)
+            self.f_subtitle = (family, 8)
+            self.f_body = (family, 12)
+            self.f_btn = (family, 10)
+            self.f_footer = (family, 10)
+        else:
+            family = "Segoe UI"
+            self.f_sidebar_title = (family, 14, "bold")
+            self.f_nav = (family, 11, "bold")
+            self.f_title = (family, 22, "bold")
+            self.f_subtitle = (family, 10)
+            self.f_body = (family, 11)
+            self.f_btn = (family, 10, "bold")
+            self.f_footer = (family, 10)
+
+    def _toggle_font(self):
+        """Toggles between pixel and standard font, refreshing all UI elements."""
+        self.use_pixel_font = not self.use_pixel_font
+        self._update_font_definitions()
+
+        # Refresh static sidebar text styles
+        self.lbl_sidebar_title.config(font=self.f_sidebar_title)
+        self.btn_nav_daily.config(font=self.f_nav)
+        self.btn_nav_general.config(font=self.f_nav)
+        self.btn_toggle_font.config(
+            text="Font: Pixel" if self.use_pixel_font else "Font: Clean",
+            font=self.f_footer,
+        )
+
+        # Redraw the active screen
+        if self.current_screen_type == "general":
+            self.show_general_screen()
+        else:
+            self.show_daily_screen()
+
+    # =========================================================================
+    # Data Persistence and Midnight Reset
     # =========================================================================
     def _load_data(self) -> dict:
-        """Carga las tareas del archivo JSON local o inicializa un diccionario vacio."""
+        """Loads tasks from local JSON storage or returns clean defaults."""
         today_str = datetime.date.today().isoformat()
         default_data = {
             "last_date": today_str,
@@ -72,12 +115,12 @@ class SimpleChecklistApp:
             return default_data
 
     def _save_data(self):
-        """Escribe el estado actual de las tareas en tasks.json."""
+        """Writes current task lists to disk."""
         with open(self.data_file, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=4, ensure_ascii=False)
 
     def _check_midnight_reset(self):
-        """Verifica si ha cambiado el dia para desmarcar los checks de tareas diarias."""
+        """Unchecks daily habits when the recorded date does not match today."""
         today_str = datetime.date.today().isoformat()
         if self.data.get("last_date") != today_str:
             for task in self.data["daily_tasks"]:
@@ -86,32 +129,49 @@ class SimpleChecklistApp:
             self._save_data()
 
     # =========================================================================
-    # Estructura Visual Principal (Sidebar y Contenedor)
+    # Main Structure (Sidebar & Container)
     # =========================================================================
     def _build_layout(self):
-        """Crea la barra de navegacion fija izquierda y el area dinamica derecha."""
-        # Sidebar fija izquierda
+        """Constructs the sidebar navigation and dynamic content workspace."""
+        # Fixed left sidebar
         self.sidebar = tk.Frame(
             self.root, bg=self.theme["sidebar"], width=160, padx=14, pady=20
         )
         self.sidebar.pack(side=tk.LEFT, fill=tk.Y)
         self.sidebar.pack_propagate(False)
 
-        # Logotipo / Titulo superior de la barra
-        title_lbl = tk.Label(
+        # Discrete font toggle button at the bottom-left
+        self.btn_toggle_font = tk.Button(
+            self.sidebar,
+            text="Font: Clean",
+            font=self.f_footer,
+            bg=self.theme["sidebar"],
+            fg=self.theme["muted"],
+            activebackground=self.theme["sidebar"],
+            activeforeground=self.theme["accent"],
+            relief=tk.FLAT,
+            bd=0,
+            cursor="hand2",
+            anchor="w",
+            command=self._toggle_font,
+        )
+        self.btn_toggle_font.pack(side=tk.BOTTOM, fill=tk.X, pady=(10, 0))
+
+        # Brand header
+        self.lbl_sidebar_title = tk.Label(
             self.sidebar,
             text="CHECKLIST",
-            font=(self.font_family, 14, "bold"),
+            font=self.f_sidebar_title,
             bg=self.theme["sidebar"],
             fg=self.theme["accent"],
         )
-        title_lbl.pack(anchor="w", pady=(0, 25))
+        self.lbl_sidebar_title.pack(anchor="w", pady=(0, 25))
 
-        # Boton de navegacion a Tareas Diarias
+        # Navigation buttons
         self.btn_nav_daily = tk.Button(
             self.sidebar,
             text="  Daily Tasks",
-            font=(self.font_family, 11, "bold"),
+            font=self.f_nav,
             bg=self.theme["sidebar"],
             fg=self.theme["text"],
             activebackground=self.theme["btn_active"],
@@ -124,11 +184,10 @@ class SimpleChecklistApp:
         )
         self.btn_nav_daily.pack(fill=tk.X, pady=4)
 
-        # Boton de navegacion a Tareas Generales
         self.btn_nav_general = tk.Button(
             self.sidebar,
             text="  General",
-            font=(self.font_family, 11, "bold"),
+            font=self.f_nav,
             bg=self.theme["sidebar"],
             fg=self.theme["muted"],
             activebackground=self.theme["btn_active"],
@@ -141,24 +200,25 @@ class SimpleChecklistApp:
         )
         self.btn_nav_general.pack(fill=tk.X, pady=4)
 
-        # Contenedor dinamico de la derecha
+        # Dynamic screen container
         self.main_container = tk.Frame(self.root, bg=self.theme["bg"])
         self.main_container.pack(
             side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=25, pady=20
         )
 
     def _switch_screen(self, new_screen: tk.Frame):
-        """Destruye la pantalla previa e inserta la nueva vista seleccionada."""
+        """Removes the prior screen frame and mounts the newly selected one."""
         if self.current_screen:
             self.current_screen.destroy()
         self.current_screen = new_screen
         self.current_screen.pack(fill=tk.BOTH, expand=True)
 
     # =========================================================================
-    # Pantalla 1: Daily Tasks (Habitos con reseteo diario)
+    # View 1: Daily Tasks
     # =========================================================================
     def show_daily_screen(self):
-        """Renderiza la vista de habitos diarios con cabecera de fecha actual."""
+        """Displays recurring daily habits with date header."""
+        self.current_screen_type = "daily"
         self.btn_nav_daily.config(
             fg=self.theme["accent"], bg=self.theme["card"]
         )
@@ -168,7 +228,6 @@ class SimpleChecklistApp:
 
         screen = tk.Frame(self.main_container, bg=self.theme["bg"])
 
-        # Formateo de fecha en ingles
         now = datetime.datetime.now()
         day_str = now.strftime("%A").upper()
         date_str = now.strftime("%B %d, %Y")
@@ -179,7 +238,7 @@ class SimpleChecklistApp:
         lbl_day = tk.Label(
             header_frame,
             text=day_str,
-            font=(self.font_family, 22, "bold"),
+            font=self.f_title,
             bg=self.theme["bg"],
             fg=self.theme["accent"],
         )
@@ -188,19 +247,19 @@ class SimpleChecklistApp:
         lbl_date = tk.Label(
             header_frame,
             text=date_str,
-            font=(self.font_family, 10),
+            font=self.f_subtitle,
             bg=self.theme["bg"],
             fg=self.theme["muted"],
         )
         lbl_date.pack(anchor="w")
 
-        # Barra de entrada para agregar nueva tarea diaria
+        # Input row
         entry_frame = tk.Frame(screen, bg=self.theme["bg"])
         entry_frame.pack(fill=tk.X, pady=(5, 15))
 
         self.daily_entry = tk.Entry(
             entry_frame,
-            font=(self.font_family, 11),
+            font=self.f_body,
             bg=self.theme["card"],
             fg=self.theme["text"],
             insertbackground=self.theme["accent"],
@@ -212,7 +271,7 @@ class SimpleChecklistApp:
         btn_add = tk.Button(
             entry_frame,
             text="Add Habit",
-            font=(self.font_family, 10, "bold"),
+            font=self.f_btn,
             bg=self.theme["accent"],
             fg=self.theme["sidebar"],
             activebackground=self.theme["btn_active"],
@@ -225,7 +284,7 @@ class SimpleChecklistApp:
         )
         btn_add.pack(side=tk.RIGHT, padx=(8, 0))
 
-        # Contenedor vertical de tareas diarias
+        # Habit list area
         self.daily_list_frame = tk.Frame(screen, bg=self.theme["bg"])
         self.daily_list_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -233,7 +292,7 @@ class SimpleChecklistApp:
         self._switch_screen(screen)
 
     def _render_daily_tasks(self):
-        """Dibuja cada tarea diaria como una tarjeta horizontal interactiva."""
+        """Populates the daily habit rows."""
         for widget in self.daily_list_frame.winfo_children():
             widget.destroy()
 
@@ -241,7 +300,7 @@ class SimpleChecklistApp:
             empty_lbl = tk.Label(
                 self.daily_list_frame,
                 text="No daily habits registered yet.\nAdd one above to track it every day.",
-                font=(self.font_family, 10),
+                font=self.f_subtitle,
                 bg=self.theme["bg"],
                 fg=self.theme["muted"],
                 pady=30,
@@ -258,11 +317,10 @@ class SimpleChecklistApp:
                 self.theme["accent"] if task["done"] else self.theme["muted"]
             )
 
-            # Boton interactivo de Check
             btn_toggle = tk.Button(
                 row,
                 text=status_symbol,
-                font=(self.font_family, 11, "bold"),
+                font=self.f_nav,
                 width=3,
                 bg=self.theme["card"],
                 fg=status_fg,
@@ -280,18 +338,17 @@ class SimpleChecklistApp:
             lbl_text = tk.Label(
                 row,
                 text=task["text"],
-                font=(self.font_family, 11),
+                font=self.f_body,
                 bg=self.theme["card"],
                 fg=text_fg,
                 anchor="w",
             )
             lbl_text.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-            # Boton para borrar habito
             btn_del = tk.Button(
                 row,
                 text="✕",
-                font=(self.font_family, 10, "bold"),
+                font=self.f_btn,
                 bg=self.theme["card"],
                 fg=self.theme["danger"],
                 activebackground=self.theme["card"],
@@ -323,10 +380,11 @@ class SimpleChecklistApp:
         self._render_daily_tasks()
 
     # =========================================================================
-    # Pantalla 2: General Tasks (Backlog permanente)
+    # View 2: General Tasks Backlog
     # =========================================================================
     def show_general_screen(self):
-        """Renderiza la vista de tareas generales que persisten indefinidamente."""
+        """Displays the persistent general backlog."""
+        self.current_screen_type = "general"
         self.btn_nav_general.config(
             fg=self.theme["accent"], bg=self.theme["card"]
         )
@@ -336,14 +394,13 @@ class SimpleChecklistApp:
 
         screen = tk.Frame(self.main_container, bg=self.theme["bg"])
 
-        # Cabecera de la seccion general
         header_frame = tk.Frame(screen, bg=self.theme["bg"])
         header_frame.pack(fill=tk.X, pady=(0, 15))
 
         lbl_title = tk.Label(
             header_frame,
             text="GENERAL BACKLOG",
-            font=(self.font_family, 22, "bold"),
+            font=self.f_title,
             bg=self.theme["bg"],
             fg=self.theme["text"],
         )
@@ -352,19 +409,19 @@ class SimpleChecklistApp:
         lbl_desc = tk.Label(
             header_frame,
             text="Persistent to-do list for pending goals and projects.",
-            font=(self.font_family, 10),
+            font=self.f_subtitle,
             bg=self.theme["bg"],
             fg=self.theme["muted"],
         )
         lbl_desc.pack(anchor="w")
 
-        # Barra de entrada para agregar nueva tarea general
+        # Input row
         entry_frame = tk.Frame(screen, bg=self.theme["bg"])
         entry_frame.pack(fill=tk.X, pady=(5, 15))
 
         self.general_entry = tk.Entry(
             entry_frame,
-            font=(self.font_family, 11),
+            font=self.f_body,
             bg=self.theme["card"],
             fg=self.theme["text"],
             insertbackground=self.theme["accent"],
@@ -378,7 +435,7 @@ class SimpleChecklistApp:
         btn_add = tk.Button(
             entry_frame,
             text="Add Task",
-            font=(self.font_family, 10, "bold"),
+            font=self.f_btn,
             bg=self.theme["accent"],
             fg=self.theme["sidebar"],
             activebackground=self.theme["btn_active"],
@@ -391,7 +448,7 @@ class SimpleChecklistApp:
         )
         btn_add.pack(side=tk.RIGHT, padx=(8, 0))
 
-        # Contenedor vertical de tareas generales
+        # General list area
         self.general_list_frame = tk.Frame(screen, bg=self.theme["bg"])
         self.general_list_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -399,7 +456,7 @@ class SimpleChecklistApp:
         self._switch_screen(screen)
 
     def _render_general_tasks(self):
-        """Dibuja cada tarea general con su estado de completitud persistente."""
+        """Populates general task rows."""
         for widget in self.general_list_frame.winfo_children():
             widget.destroy()
 
@@ -407,7 +464,7 @@ class SimpleChecklistApp:
             empty_lbl = tk.Label(
                 self.general_list_frame,
                 text="No general tasks right now.\nAdd any pending items above.",
-                font=(self.font_family, 10),
+                font=self.f_subtitle,
                 bg=self.theme["bg"],
                 fg=self.theme["muted"],
                 pady=30,
@@ -426,11 +483,10 @@ class SimpleChecklistApp:
                 self.theme["accent"] if task["done"] else self.theme["muted"]
             )
 
-            # Boton interactivo de Check
             btn_toggle = tk.Button(
                 row,
                 text=status_symbol,
-                font=(self.font_family, 11, "bold"),
+                font=self.f_nav,
                 width=3,
                 bg=self.theme["card"],
                 fg=status_fg,
@@ -448,18 +504,17 @@ class SimpleChecklistApp:
             lbl_text = tk.Label(
                 row,
                 text=task["text"],
-                font=(self.font_family, 11),
+                font=self.f_body,
                 bg=self.theme["card"],
                 fg=text_fg,
                 anchor="w",
             )
             lbl_text.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-            # Boton para borrar tarea de la lista
             btn_del = tk.Button(
                 row,
                 text="✕",
-                font=(self.font_family, 10, "bold"),
+                font=self.f_btn,
                 bg=self.theme["card"],
                 fg=self.theme["danger"],
                 activebackground=self.theme["card"],
@@ -490,11 +545,20 @@ class SimpleChecklistApp:
         self._save_data()
         self._render_general_tasks()
 
+
 def main():
+    # Fix high DPI blurriness on Windows
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    except Exception:
+        try:
+            ctypes.windll.user32.SetProcessDPIAware()
+        except Exception:
+            pass
+
     root = tk.Tk()
     SimpleChecklistApp(root)
     root.mainloop()
-
 
 if __name__ == "__main__":
     main()
