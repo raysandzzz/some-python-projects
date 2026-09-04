@@ -1,10 +1,10 @@
-# Some Python Projects.
+# Some Python Projects '-'
 
 A mini collection of simple Python utilities, automation scripts, and small GUI applications designed to be functional and easy to use. Each one was built in a day or less.
 
 ---
 
-## 📋 Overview
+##  📋 Overview
 
 | Project | Category | Tech / Libraries | Description |
 | :--- | :--- | :--- | :--- |
@@ -12,6 +12,7 @@ A mini collection of simple Python utilities, automation scripts, and small GUI 
 | `password_generator.py` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
 | `pomodoro_timer.py` | Script / Productivity | `time` | Interactive Pomodoro timer with real-time CLI progress bars and audio alerts. |
 | `decision_roulette.py` | Script / Utility | `secrets`, `time` | A marquee-style animated decision roulette with realistic deceleration. |
+| `stopwatch.py` | Desktop GUI | `tkinter` | A clean stopwatch with pause and reset controls. |
 ---
 
 ## 🛠️ Projects
@@ -39,6 +40,7 @@ If you prefer or find it more convenient, you can also run it directly from your
 * **Organize the current folder:**
   ```bash
   python file_sorter.py
+  ```
   
 * **Organize a specific folder without moving the script:**
 
@@ -81,6 +83,7 @@ You can simply double-click `password_gen.py` or run it directly from your termi
 * **Run the interactive generator:**
   ```bash
   python password_gen.py
+  ```
 
 #### <ins>CLI Pomodoro Timer</ins>
 
@@ -123,8 +126,32 @@ A simple CLI decision-maker that spins through your choices with fair random pic
 Double-click `decision_wheel.py` or run:
 
 ```bash
-python decision_wheel.py
-
+  python decision_wheel.py
+```
 
 ---
-### Tkinter apps
+### Graphical User Interface Apps
+
+#### <ins>GUI Stopwatch</ins>
+
+A tiny-simple stopwatch built mainly to learn how to use the tkinter library
+
+* **Location:** `gui_apps/stopwatch/stopwatch.py`
+* **Dependencies:** None (Python Standard Library: `tkinter`)
+* **Assets:** `gui_apps/stopwatch/assets/Minecraft.ttf` *(install this font first if you want the pixel-art look, otherwise it just defaults to your system font)*
+
+**Features:**
+
+* Dark theme
+* Pixel-art font display.
+* Classic `HH:MM:SS` formatted digital time display.
+* Dynamic button state management to prevent duplicate timers.
+* Non-blocking updates using `root.after`.
+
+**Usage:**
+
+Run directly doing double-click on `stopwatch.py` or run it in your terminal:
+
+```bash
+python gui_apps/stopwatch/stopwatch.py
+```
