@@ -13,7 +13,7 @@ class SimpleChecklistApp:
 
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("Simple Checklist")
+        self.root.title("Checklist App")
         self.root.geometry("640x500")
         self.root.resizable(False, False)
 

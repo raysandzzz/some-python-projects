@@ -155,3 +155,35 @@ Run directly doing double-click on `stopwatch.py` or run it in your terminal:
 ```bash
 python gui_apps/stopwatch/stopwatch.py
 ```
+
+#### <ins>Checklist App</ins>
+
+A lightweight, desktop task manager featuring a dark theme, pastel green accents, and a modular architecture.
+
+* **Location:** `gui_apps/checklist/checklist_main.py`
+* **Dependencies:** None (Python Standard Library: `tkinter`, `json`, `datetime`, `ctypes`)
+* **Assets:** `gui_apps/checklist/fonts/Minecraft.ttf` *(install this font first for the pixel-art look, otherwise it falls back to your system font)*
+
+**Screenshot:**
+
+![Checklist App Screenshot](gui_apps\screenshots\screenshot_checklist.png)
+
+**Features:**
+
+* **Dual-View System**: Separate panels for **Daily Tasks** (recurring daily habits) and **General Backlog** (persistent to-do list).
+* **Automatic Midnight Reset**: Tracks the current date and automatically clears daily checkmarks when a new day begins.
+* **Dynamic Typography Toggle**: Discrete bottom-left button to switch between modern (`Segoe UI`) and retro pixel-art (`Minecraft`) modes.
+* **Persistent Preferences**: Saves tasks, states, and the last selected font mode automatically in a local `tasks.json`.
+* **Modular Architecture**: Separated into dedicated modules for configuration (`config.py`), data logic (`task_manager.py`), and views (`views/`).
+
+**Usage:**
+
+> **Note:** Keep the entire `checklist/` folder structure intact (`config.py`, `task_manager.py`, `views/`, and `fonts/`), as the application relies on these modular components and relative imports to run.
+
+Run directly with a double-click on `checklist_main.py` or run it from your terminal:
+
+```bash
+python gui_apps/checklist/checklist_main.py
+```
+
+*(Optional) You can also create a desktop shortcut targeting `pythonw.exe` with the path to `checklist_main.py` to launch it without a background console window.*
