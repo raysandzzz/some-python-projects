@@ -8,11 +8,12 @@ A mini collection of simple Python utilities, automation scripts, and small GUI 
 
 | Project | Category | Tech / Libraries | Description |
 | :--- | :--- | :--- | :--- |
-| `file_sorter.py` | Script / Automation | `pathlib`, `shutil`, `argparse` | Organizes directory files by category with collision handling and undo support. |
-| `password_generator.py` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
-| `pomodoro_timer.py` | Script / Productivity | `time` | Interactive Pomodoro timer with real-time CLI progress bars and audio alerts. |
-| `decision_roulette.py` | Script / Utility | `secrets`, `time` | A marquee-style animated decision roulette with realistic deceleration. |
-| `stopwatch.py` | Desktop GUI | `tkinter` | A clean stopwatch with pause and reset controls. |
+| `file_sorter` | Script / Automation | `pathlib`, `shutil`, `argparse` | Organizes directory files by category with collision handling and undo support. |
+| `password_generator` | Script / Security | `secrets`, `string` | Generates cryptographically secure passwords with custom character rules. |
+| `pomodoro_timer` | Script / Productivity | `time` | Interactive Pomodoro timer with real-time CLI progress bars and audio alerts. |
+| `decision_roulette` | Script / Utility | `secrets`, `time` | A marquee-style animated decision roulette with realistic deceleration. |
+| `stopwatch` | Desktop GUI | `tkinter` | A clean stopwatch with pause and reset controls. |
+| `checklist` | Desktop GUI | `tkinter`, `json`, `datetime` | A minimalist checklist with persistent backlog, habit midnight reset, and dynamic typography toggling. |
 ---
 
 ## 🛠️ Projects
@@ -132,13 +133,17 @@ Double-click `decision_wheel.py` or run:
 ---
 ### Graphical User Interface Apps
 
-#### <ins>GUI Stopwatch</ins>
+#### <ins>Stopwatch</ins>
 
 A tiny-simple stopwatch built mainly to learn how to use the tkinter library
 
 * **Location:** `gui_apps/stopwatch/stopwatch.py`
 * **Dependencies:** None (Python Standard Library: `tkinter`)
-* **Assets:** `gui_apps/stopwatch/assets/Minecraft.ttf` *(install this font first if you want the pixel-art look, otherwise it just defaults to your system font)*
+* **Assets:** `gui_apps/fonts/Minecraft.ttf` *(install this font first if you want the pixel-art look, otherwise it just defaults to your system font)*
+
+**Screenshot:**
+
+![Stopwatch App Screenshot](gui_apps\screenshots\screenshot_stopwatch.png)
 
 **Features:**
 
@@ -162,7 +167,7 @@ A lightweight, desktop task manager featuring a dark theme, pastel green accents
 
 * **Location:** `gui_apps/checklist/checklist_main.py`
 * **Dependencies:** None (Python Standard Library: `tkinter`, `json`, `datetime`, `ctypes`)
-* **Assets:** `gui_apps/checklist/fonts/Minecraft.ttf` *(install this font first for the pixel-art look, otherwise it falls back to your system font)*
+* **Assets:** `gui_apps/fonts/Minecraft.ttf` *(install this font first for the pixel-art look, otherwise it falls back to your system font)*
 
 **Screenshot:**
 

@@ -16,6 +16,15 @@ class SimpleChecklistApp:
         self.root.title("Checklist App")
         self.root.geometry("640x500")
         self.root.resizable(False, False)
+        
+        # Set icon
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        icon_path = os.path.join(base_dir, "check_icon.png")
+        if os.path.exists(icon_path):
+            self.icon = tk.PhotoImage(
+                file=icon_path
+            )  # Guardar referencia en self
+            self.root.iconphoto(True, self.icon)
 
         # Initialize core manager and configuration
         base_dir = os.path.dirname(os.path.abspath(__file__))
