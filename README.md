@@ -137,7 +137,7 @@ Double-click `decision_wheel.py` or run:
 
 A tiny-simple stopwatch built mainly to learn how to use the tkinter library
 
-* **Location:** `gui_apps/stopwatch/stopwatch.py`
+* **Location:** `gui_apps/stopwatch/stopwatch.pyw`
 * **Dependencies:** None (Python Standard Library: `tkinter`)
 * **Assets:** `gui_apps/fonts/Minecraft.ttf` *(install this font first if you want the pixel-art look, otherwise it just defaults to your system font)*
 
@@ -155,17 +155,17 @@ A tiny-simple stopwatch built mainly to learn how to use the tkinter library
 
 **Usage:**
 
-Run directly doing double-click on `stopwatch.py` or run it in your terminal:
+Run directly doing double-click on `stopwatch.pyw` or run it in your terminal:
 
 ```bash
-python gui_apps/stopwatch/stopwatch.py
+pythonw gui_apps/stopwatch/stopwatch.pyw
 ```
 
 #### <ins>Checklist App</ins>
 
 A lightweight, desktop task manager featuring a dark theme, pastel green accents, and a modular architecture.
 
-* **Location:** `gui_apps/checklist/checklist_main.py`
+* **Location:** `gui_apps/checklist/checklist_main.pyw`
 * **Dependencies:** None (Python Standard Library: `tkinter`, `json`, `datetime`, `ctypes`)
 * **Assets:** `gui_apps/fonts/Minecraft.ttf` *(install this font first for the pixel-art look, otherwise it falls back to your system font)*
 
@@ -185,10 +185,10 @@ A lightweight, desktop task manager featuring a dark theme, pastel green accents
 
 > **Note:** Keep the entire `checklist/` folder structure intact (`config.py`, `task_manager.py`, `views/`, and `fonts/`), as the application relies on these modular components and relative imports to run.
 
-Run directly with a double-click on `checklist_main.py` or run it from your terminal:
+Run directly with a double-click on `checklist_main.pyw` or run it from your terminal:
 
 ```bash
-python gui_apps/checklist/checklist_main.py
+pythonw gui_apps/checklist/checklist_main.pyw
 ```
 
-*(Optional) You can also create a desktop shortcut targeting `pythonw.exe` with the path to `checklist_main.py` to launch it without a background console window.*
+*(Optional) Desktop Shortcut: Double-click create_shortcut.bat to automatically generate a Desktop shortcut pre-configured with its custom icon and correct working directory.*
