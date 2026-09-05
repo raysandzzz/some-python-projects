@@ -123,6 +123,8 @@ class GeneralView(tk.Frame):
                 font=self.fonts["body"],
                 bg=self.theme["card"],
                 fg=text_fg,
+                wraplength=340,
+                justify="left",
                 anchor="w",
             )
             lbl_text.pack(side=tk.LEFT, fill=tk.X, expand=True)

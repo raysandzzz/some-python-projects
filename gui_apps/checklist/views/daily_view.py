@@ -73,7 +73,7 @@ class DailyView(tk.Frame):
             cursor="hand2",
             padx=12,
             pady=4,
-            command=self._add_task,
+            command=self._add_task
         )
         btn_add.pack(side=tk.RIGHT, padx=(8, 0))
 
@@ -90,7 +90,7 @@ class DailyView(tk.Frame):
                 font=self.fonts["subtitle"],
                 bg=self.theme["bg"],
                 fg=self.theme["muted"],
-                pady=30,
+                pady=30
             )
             empty_lbl.pack()
             return
@@ -115,7 +115,7 @@ class DailyView(tk.Frame):
                 activeforeground=self.theme["accent"],
                 relief=tk.FLAT,
                 cursor="hand2",
-                command=lambda i=idx: self._toggle_task(i),
+                command=lambda i=idx: self._toggle_task(i)
             )
             btn_toggle.pack(side=tk.LEFT, padx=(6, 8))
 
@@ -128,7 +128,9 @@ class DailyView(tk.Frame):
                 font=self.fonts["body"],
                 bg=self.theme["card"],
                 fg=text_fg,
-                anchor="w",
+                wraplength=340,
+                justify="left",
+                anchor="w"
             )
             lbl_text.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
@@ -142,7 +144,7 @@ class DailyView(tk.Frame):
                 activeforeground=self.theme["danger"],
                 relief=tk.FLAT,
                 cursor="hand2",
-                command=lambda i=idx: self._delete_task(i),
+                command=lambda i=idx: self._delete_task(i)
             )
             btn_del.pack(side=tk.RIGHT, padx=8)
 
