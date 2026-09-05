@@ -143,7 +143,7 @@ A tiny-simple stopwatch built mainly to learn how to use the tkinter library
 
 **Screenshot:**
 
-![Stopwatch App Screenshot](gui_apps\screenshots\screenshot_stopwatch.png)
+![Stopwatch App Screenshot](gui_apps/screenshots/screenshot_stopwatch.png)
 
 **Features:**
 
@@ -171,7 +171,7 @@ A lightweight, desktop task manager featuring a dark theme, pastel green accents
 
 **Screenshot:**
 
-![Checklist App Screenshot](gui_apps\screenshots\screenshot_checklist.png)
+![Checklist App Screenshot](gui_apps/screenshots/screenshot_checklist.png)
 
 **Features:**
 
