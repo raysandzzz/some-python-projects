@@ -5,6 +5,7 @@ __pycache__/
 
 # App dynamic runtime data
 **/tasks.json
+projects.json
 
 # Environments (however i don't have env in this repo)
 .venv/
