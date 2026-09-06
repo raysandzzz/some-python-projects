@@ -192,3 +192,12 @@ pythonw gui_apps/checklist/checklist_main.pyw
 ```
 
 *(Optional) Desktop Shortcut: Double-click create_shortcut.bat to automatically generate a Desktop shortcut pre-configured with its custom icon and correct working directory.*
+
+### 🎨 <ins>[Color Picker](https://github.com/raysandzzz/color-picker-desktop)</ins>
+
+A modular desktop application built with Python and Tkinter for pixel-level color inspection and palette extraction from images. Includes standalone Windows executable support.
+
+* **Tech Stack:** Python 3, Tkinter, Pillow, PyInstaller
+* **Repository:** [raysandzzz/color-picker-desktop](https://github.com/raysandzzz/color-picker-desktop)
+
+**Screenshot:**
