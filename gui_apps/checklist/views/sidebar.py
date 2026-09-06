@@ -15,9 +15,8 @@ class Sidebar(tk.Frame):
         use_pixel: bool,
     ):
         super().__init__(
-            parent, bg=theme["sidebar"], width=160, padx=14, pady=20
+            parent, bg=theme["sidebar"], padx=18, pady=20
         )
-        self.pack_propagate(False)
 
         self.theme = theme
         self.fonts = fonts
@@ -52,10 +51,10 @@ class Sidebar(tk.Frame):
         )
         self.lbl_title.pack(anchor="w", pady=(0, 25))
 
-        # Navigation buttons
+        # Navigation buttons with padx for correct space distribution
         self.btn_daily = tk.Button(
             self,
-            text="  Daily Tasks",
+            text="Daily Tasks",
             font=self.fonts["nav"],
             bg=self.theme["sidebar"],
             fg=self.theme["text"],
@@ -64,6 +63,7 @@ class Sidebar(tk.Frame):
             relief=tk.FLAT,
             anchor="w",
             cursor="hand2",
+            padx=12,
             pady=6,
             command=lambda: self.on_navigate("daily"),
         )
@@ -71,7 +71,7 @@ class Sidebar(tk.Frame):
 
         self.btn_general = tk.Button(
             self,
-            text="  General",
+            text="General",
             font=self.fonts["nav"],
             bg=self.theme["sidebar"],
             fg=self.theme["muted"],
@@ -80,6 +80,7 @@ class Sidebar(tk.Frame):
             relief=tk.FLAT,
             anchor="w",
             cursor="hand2",
+            padx=12,
             pady=6,
             command=lambda: self.on_navigate("general"),
         )

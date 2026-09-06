@@ -14,7 +14,8 @@ class SimpleChecklistApp:
     def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Checklist App")
-        self.root.geometry("640x500")
+        self.root.geometry("760x540")
+        self.root.minsize(700, 480)
         self.root.resizable(False, False)
         
         # Set icon
