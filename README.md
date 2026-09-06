@@ -1,8 +1,22 @@
 # Some Python Projects '-'
 
-A mini collection of simple Python utilities, automation scripts, and small GUI applications designed to be functional and easy to use. Each one was built in a day or less.
+A collection of simple Python utilities, automation scripts, and small GUI applications designed to be functional and easy to use. Most of them was built in a day or less.
 
 ---
+
+## 📑 Table of Contents
+
+- [Overview](#-overview)
+- [Projects](#projects)
+  - [Scripts](#scripts)
+    - [File Sorter](#file-sorter)
+    - [Password Generator](#password-generator)
+    - [Pomodoro Timer](#pomodoro-timer)
+    - [Decision Roulette](#decision-roulette)
+  - [GUI Apps](#graphical-user-interface-apps)
+    - [Stopwatch](#stopwatch)
+    - [Checklist App](#checklist-app)
+    - [Color Picker](#color-picker-section)
 
 ##  📋 Overview
 
@@ -14,8 +28,9 @@ A mini collection of simple Python utilities, automation scripts, and small GUI 
 | `decision_roulette` | Script / Utility | `secrets`, `time` | A marquee-style animated decision roulette with realistic deceleration. |
 | `stopwatch` | Desktop GUI | `tkinter` | A clean stopwatch with pause and reset controls. |
 | `checklist` | Desktop GUI | `tkinter`, `json`, `datetime` | A minimalist checklist with persistent backlog, habit midnight reset, and dynamic typography toggling. |
+| `color_picker` | Desktop GUI / Tool | `tkinter`, `pillow` | Modular pixel inspector and automated palette generator. Decoupled to standalone repository. |
 ---
-
+<a name="projects"></a>
 ## 🛠️ Projects
 
 ### Scripts
@@ -86,7 +101,7 @@ You can simply double-click `password_gen.py` or run it directly from your termi
   python password_gen.py
   ```
 
-#### <ins>CLI Pomodoro Timer</ins>
+#### <ins>Pomodoro Timer</ins>
 
 A simple CLI timer to help you keep focused, with clean progress bars and work/break sessions.
 
@@ -192,12 +207,17 @@ pythonw gui_apps/checklist/checklist_main.pyw
 ```
 
 *(Optional) Desktop Shortcut: Double-click create_shortcut.bat to automatically generate a Desktop shortcut pre-configured with its custom icon and correct working directory.*
-
-### 🎨 <ins>[Color Picker](https://github.com/raysandzzz/color-picker-desktop)</ins>
+<a name="color-picker-section"></a>
+### 🎨 [Color Picker](https://github.com/raysandzzz/color-picker-desktop)
 
 A modular desktop application built with Python and Tkinter for pixel-level color inspection and palette extraction from images. Includes standalone Windows executable support.
 
 * **Tech Stack:** Python 3, Tkinter, Pillow, PyInstaller
 * **Repository:** [raysandzzz/color-picker-desktop](https://github.com/raysandzzz/color-picker-desktop)
 
-**Screenshot:**
+## Screenshots
+
+<div align="center">
+  <p><strong>Main Workspace</strong></p>
+  <img src="https://github.com/user-attachments/assets/459e6b4d-dc79-4498-a374-86a786085a30" alt="Color Picker Workspace" width="750">
+</div>
