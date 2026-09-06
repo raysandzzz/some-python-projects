@@ -7,7 +7,7 @@ __pycache__/
 **/tasks.json
 projects.json
 
-# Environments (however i don't have env in this repo)
+# Environments
 .venv/
 venv/
 env/
