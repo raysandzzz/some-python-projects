@@ -11,3 +11,8 @@ projects.json
 .venv/
 venv/
 env/
+
+# Pyinstaller output
+build/
+dist/
+*.spec
