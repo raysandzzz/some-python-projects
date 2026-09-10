@@ -17,35 +17,29 @@ class SimpleChecklistApp:
         self.root.geometry("760x540")
         self.root.minsize(700, 480)
         self.root.resizable(False, False)
-        
-        # Set icon
+
         base_dir = os.path.dirname(os.path.abspath(__file__))
         icon_path = os.path.join(base_dir, "check_icon.png")
         if os.path.exists(icon_path):
-            self.icon = tk.PhotoImage(
-                file=icon_path
-            )  # Guardar referencia en self
+            self.icon = tk.PhotoImage(file=icon_path)
             self.root.iconphoto(True, self.icon)
 
-        # Initialize core manager and configuration
-        base_dir = os.path.dirname(os.path.abspath(__file__))
         self.task_manager = TaskManager(os.path.join(base_dir, "tasks.json"))
-
         self.theme = THEMES["dark"]
         self.root.configure(bg=self.theme["bg"])
         self.fonts = get_font_definitions(self.task_manager.use_pixel_font)
 
-        # State trackers
         self.current_screen = None
         self.current_screen_name = "daily"
+        self.current_list_name = "General"
 
-        # Construct visual foundation
         self._build_layout()
         self.switch_screen("daily")
 
     def _build_layout(self):
         self.sidebar = Sidebar(
             parent=self.root,
+            task_manager=self.task_manager,
             theme=self.theme,
             fonts=self.fonts,
             on_navigate=self.switch_screen,
@@ -59,10 +53,11 @@ class SimpleChecklistApp:
             side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=25, pady=20
         )
 
-    def switch_screen(self, screen_name: str):
-        """Mounts the requested view inside the dynamic main container."""
+    def switch_screen(self, screen_name: str, list_name: str = "General"):
+        """Monta la vista solicitada y resalta la selección en el sidebar."""
         self.current_screen_name = screen_name
-        self.sidebar.set_active(screen_name)
+        self.current_list_name = list_name
+        self.sidebar.set_active(screen_name, list_name)
 
         if self.current_screen:
             self.current_screen.destroy()
@@ -73,23 +68,25 @@ class SimpleChecklistApp:
             )
         else:
             self.current_screen = GeneralView(
-                self.main_container, self.task_manager, self.theme, self.fonts
+                self.main_container,
+                self.task_manager,
+                self.theme,
+                self.fonts,
+                active_list=list_name,
             )
 
         self.current_screen.pack(fill=tk.BOTH, expand=True)
 
     def _toggle_font(self):
-        """Switches typography style, saves preference, and re-renders active UI."""
         new_val = not self.task_manager.use_pixel_font
         self.task_manager.use_pixel_font = new_val
         self.fonts = get_font_definitions(new_val)
 
         self.sidebar.update_styles(self.fonts, new_val)
-        self.switch_screen(self.current_screen_name)
+        self.switch_screen(self.current_screen_name, self.current_list_name)
 
 
 def main():
-    # Force Per-Monitor High DPI Awareness on Windows
     try:
         ctypes.windll.shcore.SetProcessDpiAwareness(2)
     except Exception:

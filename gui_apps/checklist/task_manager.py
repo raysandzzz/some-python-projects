@@ -18,7 +18,7 @@ class TaskManager:
             "last_date": today_str,
             "use_pixel_font": False,
             "daily_tasks": [],
-            "general_tasks": [],
+            "general_lists": {"General": []},
         }
 
         if not os.path.exists(self.data_path):
@@ -29,6 +29,12 @@ class TaskManager:
                 loaded = json.load(f)
                 if "use_pixel_font" not in loaded:
                     loaded["use_pixel_font"] = False
+                
+                # Migración automática si venía del formato de lista única anterior
+                if "general_lists" not in loaded:
+                    old_tasks = loaded.get("general_tasks", [])
+                    loaded["general_lists"] = {"General": old_tasks}
+                
                 return loaded
         except Exception:
             return defaults
@@ -42,7 +48,7 @@ class TaskManager:
         """Unchecks daily habits when the recorded date does not match today."""
         today_str = datetime.date.today().isoformat()
         if self.data.get("last_date") != today_str:
-            for task in self.data["daily_tasks"]:
+            for task in self.data.get("daily_tasks", []):
                 task["done"] = False
             self.data["last_date"] = today_str
             self.save()
@@ -59,36 +65,50 @@ class TaskManager:
 
     # --- Daily Tasks ---
     def get_daily_tasks(self) -> list:
-        return self.data["daily_tasks"]
+        return self.data.get("daily_tasks", [])
 
     def add_daily_task(self, text: str):
-        self.data["daily_tasks"].append({"text": text, "done": False})
+        self.data.setdefault("daily_tasks", []).append({"text": text, "done": False})
         self.save()
 
     def toggle_daily_task(self, index: int):
-        self.data["daily_tasks"][index]["done"] = not self.data["daily_tasks"][
-            index
-        ]["done"]
+        self.data["daily_tasks"][index]["done"] = not self.data["daily_tasks"][index]["done"]
         self.save()
 
     def delete_daily_task(self, index: int):
         self.data["daily_tasks"].pop(index)
         self.save()
 
-    # --- General Tasks ---
-    def get_general_tasks(self) -> list:
-        return self.data["general_tasks"]
+    # --- General Lists & Tasks ---
+    def get_general_list_names(self) -> list:
+        return list(self.data.setdefault("general_lists", {"General": []}).keys())
 
-    def add_general_task(self, text: str):
-        self.data["general_tasks"].append({"text": text, "done": False})
+    def create_general_list(self, name: str):
+        if name and name not in self.data["general_lists"]:
+            self.data["general_lists"][name] = []
+            self.save()
+
+    def get_general_tasks(self, list_name: str = "General") -> list:
+        return self.data.setdefault("general_lists", {}).setdefault(list_name, [])
+
+    def add_general_task(self, text: str, list_name: str = "General"):
+        self.data["general_lists"].setdefault(list_name, []).append({"text": text, "done": False})
         self.save()
 
-    def toggle_general_task(self, index: int):
-        self.data["general_tasks"][index]["done"] = not self.data[
-            "general_tasks"
-        ][index]["done"]
-        self.save()
+    def toggle_general_task(self, index: int, list_name: str = "General"):
+        tasks = self.data["general_lists"].get(list_name, [])
+        if 0 <= index < len(tasks):
+            tasks[index]["done"] = not tasks[index]["done"]
+            self.save()
 
-    def delete_general_task(self, index: int):
-        self.data["general_tasks"].pop(index)
-        self.save()
+    def delete_general_task(self, index: int, list_name: str = "General"):
+        tasks = self.data["general_lists"].get(list_name, [])
+        if 0 <= index < len(tasks):
+            tasks.pop(index)
+            self.save()
+    
+    def delete_general_list(self, name: str):
+        """Elimina una sublista y todas sus tareas asociadas."""
+        if name in self.data.get("general_lists", {}) and name != "General":
+            del self.data["general_lists"][name]
+            self.save()

@@ -14,9 +14,7 @@ class DailyView(tk.Frame):
 
         self._build_header()
         self._build_entry_bar()
-
-        self.list_container = tk.Frame(self, bg=self.theme["bg"])
-        self.list_container.pack(fill=tk.BOTH, expand=True)
+        self._build_scrollable_list()
 
         self.render_tasks()
 
@@ -73,12 +71,60 @@ class DailyView(tk.Frame):
             cursor="hand2",
             padx=12,
             pady=4,
-            command=self._add_task
+            command=self._add_task,
         )
         btn_add.pack(side=tk.RIGHT, padx=(8, 0))
 
+    def _build_scrollable_list(self):
+        """Prepara el Canvas y Scrollbar para permitir desplazamiento vertical."""
+        container_outer = tk.Frame(self, bg=self.theme["bg"])
+        container_outer.pack(fill=tk.BOTH, expand=True)
+
+        self.canvas = tk.Canvas(
+            container_outer,
+            bg=self.theme["bg"],
+            highlightthickness=0,
+            bd=0,
+        )
+        scrollbar = tk.Scrollbar(
+            container_outer,
+            orient=tk.VERTICAL,
+            command=self.canvas.yview,
+        )
+
+        self.list_container = tk.Frame(self.canvas, bg=self.theme["bg"])
+
+        # Actualiza el tamaño de la región de desplazamiento al añadir elementos
+        self.list_container.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
+        )
+
+        self.canvas_window = self.canvas.create_window(
+            (0, 0), window=self.list_container, anchor="nw"
+        )
+
+        # Ajusta el ancho interno al ancho visible del canvas
+        self.canvas.bind(
+            "<Configure>",
+            lambda e: self.canvas.itemconfig(self.canvas_window, width=e.width),
+        )
+
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Soporte para la rueda del ratón (Windows, macOS y Linux)
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-4>", lambda e: self.canvas.yview_scroll(-1, "units"))
+        self.canvas.bind_all("<Button-5>", lambda e: self.canvas.yview_scroll(1, "units"))
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
     def render_tasks(self):
-        """Clears and re-renders all daily habit rows."""
+        """Limpia y re-renderiza los hábitos diarios colocando los más recientes arriba."""
         for widget in self.list_container.winfo_children():
             widget.destroy()
 
@@ -90,12 +136,16 @@ class DailyView(tk.Frame):
                 font=self.fonts["subtitle"],
                 bg=self.theme["bg"],
                 fg=self.theme["muted"],
-                pady=30
+                pady=30,
             )
             empty_lbl.pack()
             return
 
-        for idx, task in enumerate(tasks):
+        total = len(tasks)
+        # Recorrido inverso manteniendo la referencia exacta del índice original
+        for display_idx, task in enumerate(reversed(tasks)):
+            orig_idx = total - 1 - display_idx
+
             row = tk.Frame(self.list_container, bg=self.theme["card"], pady=6)
             row.pack(fill=tk.X, pady=4)
 
@@ -115,7 +165,7 @@ class DailyView(tk.Frame):
                 activeforeground=self.theme["accent"],
                 relief=tk.FLAT,
                 cursor="hand2",
-                command=lambda i=idx: self._toggle_task(i)
+                command=lambda i=orig_idx: self._toggle_task(i),
             )
             btn_toggle.pack(side=tk.LEFT, padx=(6, 8))
 
@@ -130,7 +180,7 @@ class DailyView(tk.Frame):
                 fg=text_fg,
                 wraplength=340,
                 justify="left",
-                anchor="w"
+                anchor="w",
             )
             lbl_text.pack(side=tk.LEFT, fill=tk.X, expand=True)
 
@@ -144,7 +194,7 @@ class DailyView(tk.Frame):
                 activeforeground=self.theme["danger"],
                 relief=tk.FLAT,
                 cursor="hand2",
-                command=lambda i=idx: self._delete_task(i)
+                command=lambda i=orig_idx: self._delete_task(i),
             )
             btn_del.pack(side=tk.RIGHT, padx=8)
 
